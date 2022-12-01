@@ -11,6 +11,8 @@ contents = tFile.readlines()
 i = 0
 listOfWords = ""
 d = {}
+# While loop to create a string of all words within
+# the read text file
 while i < len(contents):
     
     concat = ""
@@ -23,14 +25,18 @@ while i < len(contents):
     i = i + 1
 
 listOfWords += ""
+# Uses earlier string created to 
+# initialize a dictionary containing all words
 result = dict((b.strip(), int(a.strip()))  
     for a, b in (element.split(':')
         for element in listOfWords.split(', '))) 
 
+#Array Objects which will hold times 
 timeArray256 = []
 timeArray512 = []
  
-
+# Void method to requestInput from a user, responsible for 
+# entire program, encapsulates all other methods
 def requestInput():
     userInput = input("Please Enter a Password to Crack: ")
     if (validateInput(userInput, result) == True):
@@ -48,7 +54,7 @@ def requestInput():
     else:
         print("Invalid Input!")
     return userInput
-
+# Method to ensure a user input is valid 
 def validateInput(uInput, d):
     inputLength = len(uInput)
     i = 0
@@ -65,15 +71,17 @@ def validateInput(uInput, d):
             counter = counter + 1
         i = i + 1
     return counter == 0 and limitCounter < 4
-
+# Method that Hashes userInput via SHA256
 def hashInput_256(uInput):
     hashed_string = hashlib.sha256(uInput.encode('utf-8')).hexdigest()
     return hashed_string
-
+# Method that Hashes userInput via SHA512
 def hashInput_512(uInput):
     hashed_string = hashlib.sha512(uInput.encode('utf-8')).hexdigest()
     return hashed_string
-
+# Method to crack the SHA256 encryption, 
+# uses for loops, to iterate from all combinations of words possible
+# will get all combination of "aaa..." possible before reaching "abc"
 def passwordCrack_256(result, userInput):
     start = time()
     user256 = hashInput_256(userInput)
@@ -95,7 +103,9 @@ def passwordCrack_256(result, userInput):
                 else:
                     holder3 = ""
     
-        
+# Method to crack the SHA512 encryption, 
+# uses for loops, to iterate from all combinations of words possible
+# will get all combination of "aaa..." possible before reaching "abc"        
 def passwordCrack_512(result, userInput):
     start = time()
     user512 = hashInput_512(userInput)
@@ -117,11 +127,13 @@ def passwordCrack_512(result, userInput):
                 else:
                     holder3 = ""
         
-
+# Prompts user to keep entering passwords to crack,
+# until the user prompts the letter q
 selectedString = ""
 while (selectedString != 'q'):
     selectedString = requestInput()
 
+# Dictionary Swap
 result_swap = {v: k for k, v in result.items()}
 print(timeArray256)
 print(timeArray512)
