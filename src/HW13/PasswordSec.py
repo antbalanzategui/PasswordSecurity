@@ -7,7 +7,11 @@ import hashlib
 from time import time
 from collections import deque
 import sys
-import matplotlib
+import matplotlib.pyplot as plt
+from matplotlib.widgets import Button
+import numpy as np
+
+
 
 
 
@@ -253,6 +257,82 @@ print(inputList)
 print(timeArray256)
 print(timeArray512)
 print(numberOfGuess)
+
+#plt.plot(timeArray256, numberOfGuess)
+#index = 0
+#while index < len(timeArray256):
+    #plt.plot(timeArray256[index], numberOfGuess[index])
+    #plt.annotate(inputList[index], xy=(timeArray256[index], numberOfGuess[index]), xytext=(timeArray256[index], numberOfGuess[index] + 50*index),
+            #arrowprops=dict(facecolor='black', shrink=0.01))
+    #index = index + 1
+    
+#plt.ylabel("Number of Searches")
+#plt.xlabel("Time for Word Guess")
+#plt.suptitle("SHA256:")
+#plt.show()
+
+#switch = input("")
+
+
+fig, ax = plt.subplots()
+plt.subplots_adjust(bottom=0.2)
+x = timeArray256
+y = numberOfGuess
+
+l, = plt.plot(x, y, lw=2)
+ax.title.set_text('SHA 256')
+index = 0
+#while index < len(timeArray256):
+    #plt.plot(timeArray256[index], numberOfGuess[index])
+    #plt.annotate(inputList[index], xy=(timeArray256[index], numberOfGuess[index]), xytext=(timeArray256[index], numberOfGuess[index] + 50*index),
+            #arrowprops=dict(facecolor='black', shrink=0.01))
+    #index = index + 1
+    
+
+
+class Index(object):
+    ind = 0
+    global funcs # used so yu can access local list, funcs, here
+    def next(self, event):
+        self.ind += 1 
+        i = self.ind %(len(funcs))
+        x,y,name = funcs[i]() # unpack tuple data
+        l.set_xdata(x) #set x value data
+        l.set_ydata(y) #set y value data
+        ax.title.set_text(name) # set title of graph
+        plt.draw()
+
+    def prev(self, event):
+        self.ind -= 1 
+        i  = self.ind %(len(funcs))
+        x,y, name = funcs[i]() #unpack tuple data
+        l.set_xdata(x) #set x value data
+        l.set_ydata(y) #set y value data
+        ax.title.set_text(name) #set title of graph
+        plt.draw()
+
+def plot1():
+    x = timeArray256
+    y = numberOfGuess
+    return (x,y,"SHA256")
+
+def plot2():
+    x = timeArray512
+    y = numberOfGuess
+    return (x,y,"SHA512")
+
+
+funcs = [plot1, plot2] # functions in a list so you can interate over
+callback = Index()
+axprev = plt.axes([0.7, 0.05, 0.1, 0.075])
+axnext = plt.axes([0.81, 0.05, 0.1, 0.075])
+bnext = Button(axnext, 'Next')
+bnext.on_clicked(callback.next)
+bprev = Button(axprev, 'Previous')
+bprev.on_clicked(callback.prev)
+index = 0
+plt.show()
+
 
 
 
